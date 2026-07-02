@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router' // 1. Swapped to Hash History import
 
 import Home from '../Pages/Home.vue'
 import About from '../Pages/About.vue'
@@ -17,8 +17,8 @@ const routes = [
 ]
 
 const router = createRouter({
-  // Tells the router that your website starts at /Shah-Humayun-Portfolio/ instead of just /
-  history: createWebHistory('/Shah-Humayun-Portfolio/'), 
+  // 2. Initialized Hash History (No base path string needed inside this method)
+  history: createWebHashHistory(), 
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition

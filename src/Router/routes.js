@@ -17,7 +17,8 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  // Tells the router that your website starts at /Shah-Humayun-Portfolio/ instead of just /
+  history: createWebHistory('/Shah-Humayun-Portfolio/'), 
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition

@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5  # 👈 Upgraded to v5 for Node 24 support
+        uses: actions/checkout@v5
 
       - name: Set up Node
-        uses: actions/setup-node@v6  # 👈 Upgraded to v6 for Node 24 support
+        uses: actions/setup-node@v6
         with:
-          node-version: 20  # Keep this at 20! This is your local project's version, which is perfect.
+          node-version: 20
           cache: "npm"
 
       - name: Install dependencies

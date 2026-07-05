@@ -1,31 +1,26 @@
 <template>
-      <!-- chatbot -->
-       <section :class="['chatbot-section', variant === 'popup' && 'chatbot-section--popup']">
+  <section :class="['chatbot-section', variant === 'popup' && 'chatbot-section--popup']">
 
-    <!-- Section label -->
     <div class="chatbot-eyebrow">
       <span class="eyebrow-dot"></span>
       <span class="eyebrow-text">Start a Conversation</span>
     </div>
 
-    <h2 class="chatbot-heading">Tell us about your project</h2>
-    <p class="chatbot-subheading">Answer a few quick questions and our team will get back to you within 24 hours.</p>
+    <h2 class="chatbot-heading">Let's work together</h2>
+    <p class="chatbot-subheading">Answer a few quick questions and I'll get back to you within 24 hours.</p>
 
-    <!-- Chat widget -->
     <div class="chatbot-card">
 
-      <!-- Header -->
       <div class="chatbot-header">
         <div class="header-left">
           <div class="header-dot"></div>
           <div>
-            <p class="header-title">WebHive Assistant</p>
+            <p class="header-title">Shah Humayun</p>
             <p class="header-sub">Online · Replies instantly</p>
           </div>
         </div>
       </div>
 
-      <!-- Messages -->
       <div ref="chatEl" class="chatbot-messages">
         <div
           v-for="msg in messages"
@@ -45,7 +40,6 @@
         </div>
       </div>
 
-      <!-- Input area -->
       <div class="chatbot-footer">
 
         <div v-if="stepType === 'buttons' && activeOptions.length" class="options-grid">
@@ -75,90 +69,134 @@
         </div>
 
         <div v-else-if="currentStep === 'completed'" class="completed-msg">
-          ✓ Message sent — we will be in touch soon!
+          ✓ Message sent — I'll be in touch soon!
         </div>
 
       </div>
     </div>
 
   </section>
-  <!-- chatbot end -->
 </template>
 
 <script setup>
 import { ref, reactive, nextTick, computed } from 'vue'
 import emailjs from '@emailjs/browser'
 
-
 const props = defineProps({
-  variant: { type: String, default: 'section' } // 'section' | 'popup'
+  variant: { type: String, default: 'section' }
 })
 
-// chatbot code
 const chatTree = {
+
+  // ── Entry point ────────────────────────────────────────────────────────────
   start: {
     sender: 'bot',
-    message: "Hi! I'm the WebHive assistant. What kind of solution are you looking to build?",
+    message: "Hi! I'm Shah Humayun's assistant. How can I help you today?",
     type: 'buttons',
     options: [
-      { text: '💻 Custom Web App',       value: 'Custom Web Application',  nextStep: 'ask_platform' },
-      { text: '📱 Mobile App',           value: 'Mobile App',              nextStep: 'ask_platform' },
-      { text: '🛒 E-Commerce Platform',  value: 'E-Commerce Platform',     nextStep: 'ask_platform' },
-      { text: '⚡ NetSuite Integration', value: 'NetSuite Integration',    nextStep: 'ask_platform' },
+      { text: '🚀 I have a project for you', value: 'Client',   nextStep: 'client_service' },
+      { text: '🏢 We want to hire you',      value: 'Recruiter', nextStep: 'hire_role' },
     ],
   },
-  ask_platform: {
+
+  // ── CLIENT FLOW ────────────────────────────────────────────────────────────
+  client_service: {
     sender: 'bot',
-    message: 'Great choice! Which platform are you targeting?',
+    message: 'Great! What kind of project are you looking to build?',
     type: 'buttons',
     options: [
-      { text: '🌐 Web',          value: 'Web',          nextStep: 'ask_budget' },
-      { text: '📱 Mobile',       value: 'Mobile',       nextStep: 'ask_budget' },
-      { text: '🖥️ Both',         value: 'Web & Mobile', nextStep: 'ask_budget' },
-      { text: '🤔 Not sure yet', value: 'Not decided',  nextStep: 'ask_budget' },
+      { text: '🎨 Landing Page',         value: 'Landing Page',           nextStep: 'client_tech' },
+      { text: '💻 Frontend Development', value: 'Frontend Development',   nextStep: 'client_tech' },
+      { text: '🌐 Full Stack App',       value: 'Full Stack Application', nextStep: 'client_tech' },
+      { text: '🤔 Not sure yet',         value: 'Not decided',            nextStep: 'client_tech' },
     ],
   },
-  ask_budget: {
+  client_tech: {
+    sender: 'bot',
+    message: 'Do you have a preferred tech stack or framework in mind?',
+    type: 'buttons',
+    options: [
+      { text: '⚛️ React',         value: 'React',          nextStep: 'client_budget' },
+      { text: '💚 Vue.js',        value: 'Vue.js',         nextStep: 'client_budget' },
+      { text: '🔲 Next.js',       value: 'Next.js',        nextStep: 'client_budget' },
+      { text: '🤷 No preference', value: 'No preference',  nextStep: 'client_budget' },
+    ],
+  },
+  client_budget: {
     sender: 'bot',
     message: 'What is your estimated budget for this project?',
     type: 'buttons',
     options: [
-      { text: 'Under $5K',   value: 'Under $5,000',      nextStep: 'ask_timeline' },
-      { text: '$5K – $15K',  value: '$5,000 – $15,000',  nextStep: 'ask_timeline' },
-      { text: '$15K – $50K', value: '$15,000 – $50,000', nextStep: 'ask_timeline' },
-      { text: '$50K+',       value: '$50,000+',           nextStep: 'ask_timeline' },
+      { text: 'Under $500',      value: 'Under $500',      nextStep: 'client_timeline' },
+      { text: '$500 – $1,500',   value: '$500 – $1,500',   nextStep: 'client_timeline' },
+      { text: '$1,500 – $5,000', value: '$1,500 – $5,000', nextStep: 'client_timeline' },
+      { text: '$5,000+',         value: '$5,000+',          nextStep: 'client_timeline' },
     ],
   },
-  ask_timeline: {
+  client_timeline: {
     sender: 'bot',
     message: 'What is your expected timeline to launch?',
     type: 'buttons',
     options: [
-      { text: '< 1 month',    value: 'Less than 1 month', nextStep: 'ask_stage' },
-      { text: '1 – 3 months', value: '1–3 months',        nextStep: 'ask_stage' },
-      { text: '3 – 6 months', value: '3–6 months',        nextStep: 'ask_stage' },
-      { text: 'Flexible',     value: 'Flexible',          nextStep: 'ask_stage' },
+      { text: '< 1 week',     value: 'Less than 1 week', nextStep: 'client_description' },
+      { text: '1 – 2 weeks',  value: '1–2 weeks',        nextStep: 'client_description' },
+      { text: '1 – 2 months', value: '1–2 months',       nextStep: 'client_description' },
+      { text: 'Flexible',     value: 'Flexible',         nextStep: 'client_description' },
     ],
   },
-  ask_stage: {
-    sender: 'bot',
-    message: 'Where is your project right now?',
-    type: 'buttons',
-    options: [
-      { text: '💡 Just an idea',         value: 'Just an idea',                nextStep: 'ask_description' },
-      { text: '📄 Have requirements',    value: 'Have requirements',           nextStep: 'ask_description' },
-      { text: '🔄 Redesigning existing', value: 'Redesigning existing product',nextStep: 'ask_description' },
-      { text: '🚀 Ready to build',       value: 'Ready to build',              nextStep: 'ask_description' },
-    ],
-  },
-  ask_description: {
+  client_description: {
     sender: 'bot',
     message: 'Briefly describe what you want to build or the problem you want to solve.',
     type: 'text_input',
     inputField: 'description',
-    placeholder: 'e.g. An app that helps restaurants manage reservations…',
+    placeholder: 'e.g. A portfolio site with animations and a contact form…',
     nextStep: 'ask_name',
   },
+
+  // ── RECRUITER FLOW ─────────────────────────────────────────────────────────
+  hire_role: {
+    sender: 'bot',
+    message: 'Awesome! What kind of role are you looking to fill?',
+    type: 'buttons',
+    options: [
+      { text: '💻 Frontend Developer',  value: 'Frontend Developer',  nextStep: 'hire_type' },
+      { text: '🌐 Full Stack Developer', value: 'Full Stack Developer', nextStep: 'hire_type' },
+      { text: '🎨 UI/UX + Frontend',    value: 'UI/UX + Frontend',    nextStep: 'hire_type' },
+      { text: '🤔 Still deciding',      value: 'Not decided yet',     nextStep: 'hire_type' },
+    ],
+  },
+  hire_type: {
+    sender: 'bot',
+    message: 'What type of engagement are you offering?',
+    type: 'buttons',
+    options: [
+      { text: '⏱️ Full-time',   value: 'Full-time',   nextStep: 'hire_location' },
+      { text: '🕐 Part-time',   value: 'Part-time',   nextStep: 'hire_location' },
+      { text: '📋 Contract',    value: 'Contract',    nextStep: 'hire_location' },
+      { text: '🔀 Flexible',    value: 'Flexible',    nextStep: 'hire_location' },
+    ],
+  },
+  hire_location: {
+    sender: 'bot',
+    message: 'What is the work arrangement?',
+    type: 'buttons',
+    options: [
+      { text: '🏠 Remote',        value: 'Remote',        nextStep: 'hire_description' },
+      { text: '🏢 On-site',       value: 'On-site',       nextStep: 'hire_description' },
+      { text: '🔄 Hybrid',        value: 'Hybrid',        nextStep: 'hire_description' },
+      { text: '🌍 Open to both',  value: 'Open to both',  nextStep: 'hire_description' },
+    ],
+  },
+  hire_description: {
+    sender: 'bot',
+    message: 'Tell me a bit about the company and the role.',
+    type: 'text_input',
+    inputField: 'description',
+    placeholder: 'e.g. We are a SaaS startup looking for a Vue.js developer…',
+    nextStep: 'ask_name',
+  },
+
+  // ── SHARED CLOSING STEPS ───────────────────────────────────────────────────
   ask_name: {
     sender: 'bot',
     message: 'Thanks! What is your name?',
@@ -169,27 +207,35 @@ const chatTree = {
   },
   ask_email: {
     sender: 'bot',
-    message: (name) => `Nice to meet you, ${name}! What's your email address so our team can reach you?`,
+    message: (name) => `Nice to meet you, ${name}! What's your email address so I can reach you?`,
     type: 'text_input',
     inputField: 'email',
-    placeholder: 'name@company.com',
+    placeholder: 'name@example.com',
     nextStep: 'submit_lead',
   },
 }
 
-const currentStep   = ref('start')
-const isTyping      = ref(false)
-const inputValue    = ref('')
-const chatEl        = ref(null)
+const currentStep  = ref('start')
+const isTyping     = ref(false)
+const inputValue   = ref('')
+const chatEl       = ref(null)
 
 const lead = reactive({
-  service: '', platform: '', budget: '',
-  timeline: '', project_stage: '',
-  description: '', name: '', email: '',
+  intent: '',
+  service: '',
+  tech_stack: '',
+  budget: '',
+  timeline: '',
+  role: '',
+  engagement_type: '',
+  work_arrangement: '',
+  description: '',
+  name: '',
+  email: '',
 })
 
 const now = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-const messages = ref([{ id: 1, sender: 'bot', text: chatTree.start.message, time: now() }])
+const messages      = ref([{ id: 1, sender: 'bot', text: chatTree.start.message, time: now() }])
 const activeOptions = ref(chatTree.start.options)
 const stepType      = computed(() => chatTree[currentStep.value]?.type ?? '')
 
@@ -199,14 +245,18 @@ const scroll = async () => {
 }
 
 const stepFieldMap = {
-  ask_platform: 'platform',
-  ask_budget:   'budget',
-  ask_timeline: 'timeline',
-  ask_stage:    'project_stage',
+  start:            'intent',
+  client_service:   'service',
+  client_tech:      'tech_stack',
+  client_budget:    'budget',
+  client_timeline:  'timeline',
+  hire_role:        'role',
+  hire_type:        'engagement_type',
+  hire_location:    'work_arrangement',
 }
 
 const handleOption = (option) => {
-  const field = stepFieldMap[currentStep.value] || 'service'
+  const field = stepFieldMap[currentStep.value] || 'intent'
   lead[field] = option.value
   messages.value.push({ id: Date.now(), sender: 'user', text: option.text, time: now() })
   activeOptions.value = []
@@ -242,31 +292,55 @@ const advance = (key) => {
 const sendEmail = async () => {
   isTyping.value = true
   scroll()
+
+  const isClient    = lead.intent === 'Client'
+  const templateParams = isClient
+    ? {
+        from_name:   lead.name,
+        from_email:  lead.email,
+        intent:      'Project Inquiry',
+        service:     lead.service,
+        tech_stack:  lead.tech_stack,
+        budget:      lead.budget,
+        timeline:    lead.timeline,
+        description: lead.description,
+      }
+    : {
+        from_name:        lead.name,
+        from_email:       lead.email,
+        intent:           'Hiring Inquiry',
+        role:             lead.role,
+        engagement_type:  lead.engagement_type,
+        work_arrangement: lead.work_arrangement,
+        description:      lead.description,
+      }
+
   try {
     const res = await emailjs.send(
       import.meta.env.VITE_EMAILJS_SERVICE_ID,
       import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      {
-        from_name:     lead.name,
-        from_email:    lead.email,
-        service:       lead.service,
-        platform:      lead.platform,
-        budget:        lead.budget,
-        timeline:      lead.timeline,
-        project_stage: lead.project_stage,
-        description:   lead.description,
-      },
+      templateParams,
       import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
     )
     isTyping.value = false
     if (res.status === 200) {
-      messages.value.push({ id: Date.now(), sender: 'bot', text: `✅ All done, ${lead.name}! Your details have been sent to our team. We'll get back to you within 24 hours.`, time: now() })
+      messages.value.push({
+        id: Date.now(),
+        sender: 'bot',
+        text: `✅ All done, ${lead.name}! I've received your message and will get back to you within 24 hours.`,
+        time: now(),
+      })
       currentStep.value = 'completed'
     }
   } catch (err) {
     console.error(err)
     isTyping.value = false
-    messages.value.push({ id: Date.now(), sender: 'bot', text: '⚠️ Something went wrong. Please try again or email us directly.', time: now() })
+    messages.value.push({
+      id: Date.now(),
+      sender: 'bot',
+      text: '⚠️ Something went wrong. Please try again or reach me directly.',
+      time: now(),
+    })
   } finally {
     scroll()
   }
@@ -274,7 +348,6 @@ const sendEmail = async () => {
 </script>
 
 <style scoped>
-/* ── chatbot design ── */
 .chatbot-section {
   width: 100%;
   max-width: 640px;
@@ -286,7 +359,6 @@ const sendEmail = async () => {
   font-family: 'Space Grotesk', 'Inter', sans-serif;
 }
 
-/* ── Eyebrow ── */
 .chatbot-eyebrow {
   display: flex;
   align-items: center;
@@ -310,7 +382,6 @@ const sendEmail = async () => {
   color: #00ffa3;
 }
 
-/* ── Headings ── */
 .chatbot-heading {
   font-size: clamp(1.6rem, 4vw, 2.4rem);
   font-weight: 800;
@@ -320,11 +391,6 @@ const sendEmail = async () => {
   margin-bottom: 12px;
   line-height: 1.1;
   width: 100%;
-  transition: color var(--transition-speed);
-}
-
-.theme-light .chatbot-heading {
-  color: #0f172a;
 }
 .chatbot-subheading {
   font-size: 14px;
@@ -333,13 +399,8 @@ const sendEmail = async () => {
   line-height: 1.6;
   margin-bottom: 40px;
   max-width: 420px;
-  transition: color var(--transition-speed);
-}
-.theme-light .chatbot-subheading {
-  color: #475569;
 }
 
-/* ── Card ── */
 .chatbot-card {
   width: 100%;
   background: #0a0a0a;
@@ -351,7 +412,6 @@ const sendEmail = async () => {
   outline: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-/* ── Header ── */
 .chatbot-header {
   display: flex;
   align-items: center;
@@ -391,7 +451,6 @@ const sendEmail = async () => {
   text-align: center;
 }
 
-/* ── Messages ── */
 .chatbot-messages {
   flex: 1;
   overflow-y: auto;
@@ -426,35 +485,19 @@ const sendEmail = async () => {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 .msg-text { flex: 1 1 auto; word-break: break-word; }
-.msg-time {
-  font-size: 10px;
-  flex-shrink: 0;
-  margin-left: auto;
-  white-space: nowrap;
-}
+.msg-time { font-size: 10px; flex-shrink: 0; margin-left: auto; white-space: nowrap; }
 
-.msg-bubble--bot {
-  background: #1c1c1e;
-  color: #f0f0f0;
-  border-bottom-left-radius: 0;
-}
+.msg-bubble--bot { background: #1c1c1e; color: #f0f0f0; }
 .msg-bubble--bot .msg-time { color: rgba(255, 255, 255, 0.35); }
-
-.msg-bubble--user {
-  background: #008f5f;
-  color: #fff;
-  border-bottom-right-radius: 0;
-}
+.msg-bubble--user { background: #008f5f; color: #fff; }
 .msg-bubble--user .msg-time { color: rgba(255, 255, 255, 0.65); }
 
-/* ── Typing dots ── */
 .typing-dots {
   display: flex;
   align-items: center;
   gap: 5px;
   padding: 12px 14px;
   background: #1c1c1e;
-  border-bottom-left-radius: 0;
 }
 .typing-dots span {
   display: block;
@@ -467,7 +510,6 @@ const sendEmail = async () => {
 .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
 .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
 
-/* ── Footer ── */
 .chatbot-footer {
   padding: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -475,7 +517,6 @@ const sendEmail = async () => {
   flex-shrink: 0;
 }
 
-/* ── Options ── */
 .options-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -495,19 +536,10 @@ const sendEmail = async () => {
   letter-spacing: 0.01em;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
-.option-btn:hover {
-  border-color: #00ffa3;
-  color: #00ffa3;
-  background: rgba(0, 255, 163, 0.04);
-}
+.option-btn:hover { border-color: #00ffa3; color: #00ffa3; background: rgba(0, 255, 163, 0.04); }
 .option-btn:active { transform: scale(0.97); }
 
-/* ── Input row ── */
-.input-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
+.input-row { display: flex; gap: 8px; align-items: center; }
 .chat-input {
   flex: 1;
   height: 44px;
@@ -541,7 +573,6 @@ const sendEmail = async () => {
 .send-btn:hover  { background: #00e691; }
 .send-btn:active { transform: scale(0.94); }
 
-/* ── Completed ── */
 .completed-msg {
   text-align: center;
   font-size: 13px;
@@ -551,7 +582,6 @@ const sendEmail = async () => {
   letter-spacing: 0.01em;
 }
 
-/* ── Keyframes ── */
 @keyframes pulse-green {
   0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(0,255,163,0.7); }
   50%       { opacity: 0.55; box-shadow: 0 0 4px rgba(0,255,163,0.2); }
@@ -561,19 +591,9 @@ const sendEmail = async () => {
   40%           { transform: translateY(-5px); }
 }
 
-/* ── Popup variant override (used only when embedded as a floating widget) ── */
-.chatbot-section--popup {
-  max-width: 100%;
-  padding: 0;
-  height: 100%;
-}
+.chatbot-section--popup { max-width: 100%; padding: 0; height: 100%; }
 .chatbot-section--popup .chatbot-eyebrow,
 .chatbot-section--popup .chatbot-heading,
-.chatbot-section--popup .chatbot-subheading {
-  display: none;
-}
-.chatbot-section--popup .chatbot-card {
-  height: 100%;
-  outline: none;
-}
+.chatbot-section--popup .chatbot-subheading { display: none; }
+.chatbot-section--popup .chatbot-card { height: 100%; outline: none; }
 </style>

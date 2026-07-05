@@ -3,7 +3,7 @@
     
     <div class="container mx-auto flex flex-col-reverse lg:flex-row items-center justify-between gap-12 z-10">
       
-      <div class="w-full lg:w-1/2 flex flex-col justify-center space-y-6 text-center lg:text-left">
+<div class="w-full lg:w-1/2 flex flex-col justify-center space-y-6 pb-16 lg:pb-0 text-center lg:text-left">
         <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">
           Hi, I am <span class="text-[#64ffda]">Shah Humayun</span>
         </h1>

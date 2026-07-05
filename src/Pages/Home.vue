@@ -2,12 +2,20 @@
   <section class="main-hero">
     <Header />
     <HomeHeroComponent />
+    <BentoGrid />
+    <ProjectSpotlight />
+    <HomePageCTA />
+    <HomeFooter />
   </section>
 </template>
 
 <script setup>
 import Header from '../components/Header.vue'
 import HomeHeroComponent from '../components/HomeHeroComponent.vue'
+import BentoGrid from '../components/BentoGrid.vue';
+import ProjectSpotlight from '../components/ProjectSpotlight.vue';
+import HomePageCTA from '../components/HomePageCTA.vue';
+import HomeFooter from '../components/HomeFooter.vue';
 </script>
 
 <style scoped>
